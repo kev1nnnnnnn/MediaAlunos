@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import {View, Text, TextInput, TouchableOpacity} from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Vibration, //sensor de vibrar API
+    Pressable, //area clicável
+    Keyboard
+    } from "react-native";
 import ResultMedia from "./ResultMedia";
 import styles from "./style";
 
@@ -15,9 +23,24 @@ export default function Form() {
 
     const [textButton, setTextButton] = useState("Enviar")
 
+    const [errorMsg, setErrorMsg] = useState(null)
+
     function calculaMedia() {
 
-        return setMedia( (parseFloat(n1)  + parseFloat(n2) + parseFloat(n3)) / 3 .toFixed(2))
+        //formatação
+        let n1Format = n1.replace(",", ".")
+        let n2Format = n2.replace(",", ".")
+        let n3Format = n3.replace(",", ".")
+
+        return setMedia( (parseFloat(n1Format)  + parseFloat(n2Format) + parseFloat(n3Format)) / 3 .toFixed(2) )
+    }
+
+    function verificaMedia() {
+
+        if (media == null) {
+            Vibration.vibrate() //vibrar a tela 
+            setErrorMsg("Campo obrigatório*") 
+        }
     }
 
     function validaMedia() {
@@ -29,21 +52,26 @@ export default function Form() {
             setN2(null)
             setN3(null)
             setMsgMedia("Sua média é : ")
-            setTextButton("Calcular novamente: ")
-            return
-        } 
+            setTextButton("Calcular novamente ")
+            setErrorMsg(null)
 
-        setMedia(null)
-        setTextButton("Calcular: ")
-        setMsgMedia("Preencha os campos novamente")
+        } else {
+            verificaMedia()
+            setMedia(null)
+            setTextButton("Calcular: ")
+            setMsgMedia("Preencha os campos novamente")
+        }
+       
     }
 
     return (
 
         <View style={styles.FormContext}>
-            <View style={styles.form}>
-
+            {/* se não existir a media  */}
+            {media == null ?  
+            <Pressable onPress={Keyboard.dismiss} style={styles.form}>
                 <Text style={styles.formLabel}>Informe a 1º nota</Text>
+                <Text style={styles.errorMsg}>{errorMsg}</Text>
                 <TextInput style={styles.formInput}
                     keyboardType="numeric"
                     onChangeText={setN1}
@@ -51,6 +79,7 @@ export default function Form() {
                 />
 
                 <Text style={styles.formLabel}>Informe a 2º nota</Text>
+                <Text style={styles.errorMsg}>{errorMsg}</Text>
                 <TextInput style={styles.formInput}
                     keyboardType="numeric"
                     onChangeText={setN2}
@@ -58,6 +87,7 @@ export default function Form() {
                 />
 
                 <Text style={styles.formLabel}>Informe a 3º nota</Text>
+                <Text style={styles.errorMsg}>{errorMsg}</Text>
                 <TextInput style={styles.formInput}
                     keyboardType="numeric"
                     onChangeText={setN3}
@@ -68,11 +98,26 @@ export default function Form() {
                 onPress = {() =>{
                     validaMedia()
                 }}
-               >    
+                >    
                <Text  style={styles.textButton}>{textButton}</Text>
-                   </TouchableOpacity>
+                </TouchableOpacity>
+            </Pressable>
+            // retorna apenas o formulario
+            : 
+            // Se a media não for vazia, então retorna a view do resultado
+            <View style={styles.exibirMedia}>
+                <ResultMedia msgResultMedia={msgMedia} resultMedia={media}/>
+                
+                <TouchableOpacity  style={styles.buttonCalcular}
+                onPress = {() =>{
+                    validaMedia()
+                }}
+                >    
+               <Text  style={styles.textButton}>{textButton}</Text>
+                </TouchableOpacity>
             </View>
-            <ResultMedia msgResultMedia={msgMedia} resultMedia={media}/>
+            }  
+            {/* END */}
         </View>
 
     );

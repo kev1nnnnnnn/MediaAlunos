@@ -1,23 +1,23 @@
+import { render } from "react-dom";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
 
     FormContext: {
-        width: "100%",
-        height: "100%",
+        flex: 1,
         bottom: 0,
         alignItems: "center",
         backgroundColor: "#fff",
-        marginTop:50,
+        marginTop: 30,
+        paddingTop: 30,
         borderTopLeftRadius: 50,
-        borderTopRightRadius: 50
+        borderTopRightRadius: 50,
     },
 
     form: {
         width: "100%",
         height: "auto",
-        marginTop: 30,
-        padding:10
+     
     },  
 
     formLabel: {
@@ -52,6 +52,14 @@ const styles = StyleSheet.create({
 
         fontSize: 20,
         color: "#ffff",
+    },
+
+    errorMsg: {
+
+        fontSize: 12,
+        color: "red",
+        fontWeight: "bold",
+        paddingLeft: 20,
     }
 
 
