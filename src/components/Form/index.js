@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     Vibration, //sensor de vibrar API
     Pressable, //area clicável
-    Keyboard
+    Keyboard,
+    FlatList, //listar dados
     } from "react-native";
 import ResultMedia from "./ResultMedia";
 import styles from "./style";
@@ -25,6 +26,8 @@ export default function Form() {
 
     const [errorMsg, setErrorMsg] = useState(null)
 
+    const [mediaList, setMediaList] = useState([])
+
     function calculaMedia() {
 
         //formatação
@@ -32,7 +35,11 @@ export default function Form() {
         let n2Format = n2.replace(",", ".")
         let n3Format = n3.replace(",", ".")
 
-        return setMedia( (parseFloat(n1Format)  + parseFloat(n2Format) + parseFloat(n3Format)) / 3 .toFixed(2) )
+        let totalMedia = (parseFloat(n1Format)  + parseFloat(n2Format) + parseFloat(n3Format) / 3).toFixed(2)   
+        // seta a listagem, passa um id único e a mediaTotal
+        setMediaList((arr) => [...arr, {id: new Date().getTime(), media:totalMedia}])
+        
+        setMedia(totalMedia)
     }
 
     function verificaMedia() {
@@ -118,6 +125,26 @@ export default function Form() {
             </View>
             }  
             {/* END */}
+
+
+            <FlatList
+            showsVerticalScrollIndicator={false}
+            style={styles.listMedias}
+            data={mediaList.reverse()}
+            renderItem={({item}) => {
+                return(
+                 <Text style={styles.resultMediaItem}>
+                    <Text style={styles.textResultItemList}>Resultado da Média =  </Text>
+                    {item.media}
+                 </Text>
+                              
+                )
+            }}
+            keyExtractor={(item) => {
+                item.id
+            }}
+            >
+            </FlatList>
         </View>
 
     );

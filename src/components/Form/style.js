@@ -60,6 +60,23 @@ const styles = StyleSheet.create({
         color: "red",
         fontWeight: "bold",
         paddingLeft: 20,
+    },
+
+    listMedias: {
+        marginTop: 20,
+    },
+
+    resultMediaItem: {
+        fontSize: 24,
+        color: "blue",
+        height: 50,
+        width: "100%",
+        paddingRight: 20,
+    },
+
+    textResultItemList: {
+        fontSize: 16,
+        color: "#17203c"
     }
 
 
